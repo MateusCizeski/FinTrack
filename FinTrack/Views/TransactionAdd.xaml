@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:FinTrack.ViewModels"
     x:Class="FinTrack.Views.TransactionAdd"
-    x:DataType="vm:TransactionAddViewModel"
     NavigationPage.HasNavigationBar="False">
 
     <ScrollView>
