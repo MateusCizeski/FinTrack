@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinTrack.ViewModels"
+    x:Class="FinTrack.Views.TransactionAdd"
+    x:DataType="vm:TransactionAddViewModel"
+    NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <Grid ColumnDefinitions="*,40" Padding="24,52,24,24">
+                <Label Text="Nova Transação" FontSize="22" FontAttributes="Bold" VerticalOptions="Center"/>
+                <Button Grid.Column="1" Text="✕" Command="{Binding CloseAsyncCommand}"
+                        WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                        BackgroundColor="{StaticResource Surface2}"
+                        TextColor="{StaticResource TextPrimary}"/>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" Margin="24,0,24,24" ColumnSpacing="10">
+                <Border BackgroundColor="{StaticResource Surface}"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeShape="RoundRectangle 16" Padding="16,14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectIncomeCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="📈" FontSize="20" HorizontalOptions="Center"/>
+                        <Label Text="Receita" FontSize="13" FontAttributes="None"
+                               TextColor="{StaticResource Green}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource Surface}"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeShape="RoundRectangle 16" Padding="16,14">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectExpenseCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="📉" FontSize="20" HorizontalOptions="Center"/>
+                        <Label Text="Despesa" FontSize="13" FontAttributes="None"
+                               TextColor="{StaticResource Coral}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Label Margin="24,0,24,12" TextColor="{StaticResource Coral}"
+                   Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}"/>
+
+            <Label Text="NOME" Margin="24,0,24,6"
+                   TextColor="{StaticResource TextMuted}" FontSize="10"/>
+            <Border Margin="24,0,24,16" Padding="4,0"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 14">
+                <Entry Text="{Binding Name}" Placeholder="Ex: Salário, iFood..." Margin="12,0"/>
+            </Border>
+
+            <Label Text="VALOR (R$)" Margin="24,0,24,6"
+                   TextColor="{StaticResource TextMuted}" FontSize="10"/>
+            <Border Margin="24,0,24,16" Padding="4,0"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 14">
+                <Entry Text="{Binding Value}" Placeholder="0,00" Keyboard="Numeric" Margin="12,0"/>
+            </Border>
+
+            <Label Text="DATA" Margin="24,0,24,6"
+                   TextColor="{StaticResource TextMuted}" FontSize="10"/>
+            <Border Margin="24,0,24,20" Padding="16,4"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 14">
+                <DatePicker Date="{Binding Date}"
+                            Margin="{OnPlatform Default='0', MacCatalyst='0,8,0,0'}"/>
+            </Border>
+
+            <Label Text="CATEGORIA" Margin="24,0,24,12"
+                   TextColor="{StaticResource TextMuted}" FontSize="10"/>
+            <CollectionView ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding SelectedCategory}"
+                            SelectionMode="Single" Margin="20,0,20,28">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="4"
+                                     HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="{StaticResource Surface}"
+                                Stroke="{StaticResource BorderColor}"
+                                StrokeShape="RoundRectangle 12" Padding="10">
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="{Binding Emoji}" FontSize="20" HorizontalOptions="Center"/>
+                                <Label Text="{Binding Label}" FontSize="10"
+                                       TextColor="{StaticResource TextMuted}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Margin="24,0,24,40" Text="Salvar"
+                    Command="{Binding SaveAsyncCommand}"
+                    HeightRequest="54" CornerRadius="16"
+                    BackgroundColor="{StaticResource Green}"
+                    TextColor="Black" FontSize="16" FontAttributes="Bold"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

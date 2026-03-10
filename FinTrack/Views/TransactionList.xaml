@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinTrack.ViewModels"
+    xmlns:models="clr-namespace:FinTrack.Models"
+    xmlns:converters="clr-namespace:FinTrack.Libraries.Converters"
+    x:Class="FinTrack.Views.TransactionList"
+    NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <converters:TransactionValueConverter x:Key="TransactionValueConverter" />
+        <converters:TransactionValueColorConverter x:Key="TransactionValueColorConverter" />
+        <converters:CategoryEmojiConverter x:Key="CategoryEmojiConverter" />
+        <converters:CategoryBadgeColorConverter x:Key="CategoryBadgeColorConverter" />
+        <converters:CategoryBadgeTextColorConverter x:Key="CategoryBadgeTextColorConverter" />
+        <converters:BalanceColorConverter x:Key="BalanceColorConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <!-- Greeting -->
+            <VerticalStackLayout Padding="24,52,24,16" Spacing="2">
+                <Label Text="Olá, bom dia 👋" TextColor="{StaticResource TextMuted}" FontSize="13"/>
+                <Label Text="Meu Financeiro" FontSize="22" FontAttributes="Bold"/>
+            </VerticalStackLayout>
+
+            <!-- Filtro de mês -->
+            <Border Margin="24,0,24,20" Padding="8"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 50">
+                <Grid ColumnDefinitions="36,*,36">
+                    <Button Text="‹" Command="{Binding PreviousMonthAsyncCommand}"
+                            WidthRequest="32" HeightRequest="32" CornerRadius="16" Padding="0"
+                            BackgroundColor="{StaticResource Surface2}"
+                            TextColor="{StaticResource TextPrimary}"/>
+                    <Label Grid.Column="1" Text="{Binding MonthLabel}"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           FontSize="14" FontAttributes="Bold"/>
+                    <Button Grid.Column="2" Text="›" Command="{Binding NextMonthAsyncCommand}"
+                            WidthRequest="32" HeightRequest="32" CornerRadius="16" Padding="0"
+                            BackgroundColor="{StaticResource Surface2}"
+                            TextColor="{StaticResource TextPrimary}"/>
+                </Grid>
+            </Border>
+
+            <!-- Cards receita / despesa -->
+            <Grid ColumnDefinitions="*,*" Margin="24,0,24,16" ColumnSpacing="12">
+                <Border BackgroundColor="{StaticResource Surface}"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeShape="RoundRectangle 18" Padding="16">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="📈" FontSize="18"/>
+                        <Label Text="RECEITAS" TextColor="{StaticResource TextMuted}" FontSize="10"/>
+                        <Label Text="{Binding Income, StringFormat='{0:C}'}"
+                               TextColor="{StaticResource Green}" FontSize="20" FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource Surface}"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeShape="RoundRectangle 18" Padding="16">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="📉" FontSize="18"/>
+                        <Label Text="DESPESAS" TextColor="{StaticResource TextMuted}" FontSize="10"/>
+                        <Label Text="{Binding Expense, StringFormat='{0:C}'}"
+                               TextColor="{StaticResource Coral}" FontSize="20" FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Saldo + FAB -->
+            <Border Margin="24,0,24,24" Padding="20,16"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 18">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="SALDO DO MÊS" TextColor="{StaticResource TextMuted}" FontSize="11"/>
+                        <Label Text="{Binding Balance, StringFormat='{0:C}'}"
+                               TextColor="{Binding IsPositiveBalance, Converter={StaticResource BalanceColorConverter}}"
+                               FontSize="32" FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="+"
+                            Command="{Binding AddTransactionAsyncCommand}"
+                            WidthRequest="54" HeightRequest="54"
+                            CornerRadius="18" Padding="0"
+                            BackgroundColor="{StaticResource Green}"
+                            TextColor="Black" FontSize="32"/>
+                </Grid>
+            </Border>
+
+            <!-- Lista -->
+            <Label Text="TRANSAÇÕES" Margin="24,0,24,10"
+                   TextColor="{StaticResource TextMuted}" FontSize="11" FontAttributes="Bold"/>
+
+            <CollectionView ItemsSource="{Binding Transactions}" Margin="16,0,16,32">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="4,4">
+                            <Border BackgroundColor="Transparent" Stroke="Transparent"
+                        StrokeShape="RoundRectangle 14" Padding="12,10">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnItemTapped" CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                                    <Border WidthRequest="42" HeightRequest="42"
+                                BackgroundColor="{Binding Category, Converter={StaticResource CategoryBadgeColorConverter}}"
+                                StrokeShape="RoundRectangle 12" Stroke="Transparent">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnDeleteTapped" CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding Category, Converter={StaticResource CategoryEmojiConverter}}"
+                                   FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" FontSize="14" LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}"
+                                   TextColor="{StaticResource TextMuted}" FontSize="11"/>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2"
+                               Text="{Binding ., Converter={StaticResource TransactionValueConverter}}"
+                               TextColor="{Binding ., Converter={StaticResource TransactionValueColorConverter}}"
+                               FontSize="14" FontAttributes="Bold" VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
