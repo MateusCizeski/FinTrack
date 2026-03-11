@@ -1,9 +1,10 @@
-﻿namespace FinTrack;
-
-public partial class AppShell : Shell
+﻿namespace FinTrack
 {
-    public AppShell()
+    public partial class AppShell : Shell
     {
-        InitializeComponent();
+        public AppShell()
+        {
+            InitializeComponent();
+        }
     }
 }

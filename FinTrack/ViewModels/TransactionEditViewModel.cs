@@ -12,7 +12,7 @@ namespace FinTrack.ViewModels
 
         public TransactionEditViewModel(ITransactionRepository repository) : base(repository) { }
 
-        private async Task LoadAsync(int id)
+        public async Task LoadAsync(int id)
         {
             var all = await Repository.GetAllAsync();
             _original = all.FirstOrDefault(t => t.Id == id);

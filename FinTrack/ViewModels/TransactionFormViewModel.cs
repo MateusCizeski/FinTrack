@@ -58,7 +58,7 @@ namespace FinTrack.ViewModels
                 await PersistAsync();
                 KeyboardFixBugs.HideKeyboard();
                 WeakReferenceMessenger.Default.Send<string>(string.Empty);
-                await Shell.Current.GoToAsync("..");
+                await Application.Current!.MainPage!.Navigation.PopAsync();
             }
             finally { IsSaving = false; }
         }
@@ -67,7 +67,7 @@ namespace FinTrack.ViewModels
         public async Task CloseAsync()
         {
             KeyboardFixBugs.HideKeyboard();
-            await Shell.Current.GoToAsync("..");
+            await Application.Current!.MainPage!.Navigation.PopAsync();
         }
 
         protected TransactionType ResolvedType

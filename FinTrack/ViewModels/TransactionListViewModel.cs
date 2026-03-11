@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using FinTrack.Models;
 using FinTrack.Repositories;
+using FinTrack.Views;
 using System.Collections.ObjectModel;
 
 namespace FinTrack.ViewModels
@@ -50,11 +51,19 @@ namespace FinTrack.ViewModels
 
         [RelayCommand]
         public async Task AddTransactionAsync()
-            => await Shell.Current.GoToAsync("TransactionAdd");
+        {
+            var page = IPlatformApplication.Current!.Services.GetRequiredService<TransactionAdd>();
+            await Application.Current!.MainPage!.Navigation.PushAsync(page);
+        }
 
         [RelayCommand]
         public async Task EditTransactionAsync(Transaction t)
-            => await Shell.Current.GoToAsync($"TransactionEdit?transactionId={t.Id}");
+        {
+            var vm = IPlatformApplication.Current!.Services.GetRequiredService<TransactionEditViewModel>();
+            await vm.LoadAsync(t.Id);
+            var page = IPlatformApplication.Current!.Services.GetRequiredService<TransactionEdit>();
+            await Application.Current!.MainPage!.Navigation.PushAsync(page);
+        }
 
         [RelayCommand]
         public async Task DeleteTransactionAsync(Transaction t)

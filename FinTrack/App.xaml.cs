@@ -1,13 +1,11 @@
-﻿using FinTrack.Views;
-
-namespace FinTrack
+﻿namespace FinTrack
 {
     public partial class App : Application
     {
-        public App(TransactionList transactionList)
+        public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(transactionList);
+            MainPage = new AppShell();
         }
     }
 }

@@ -4,9 +4,10 @@ namespace FinTrack.Views;
 
 public partial class TransactionAdd : ContentPage
 {
-    public TransactionAdd(TransactionAddViewModel viewModel)
+    public TransactionAdd()
     {
         InitializeComponent();
-        BindingContext = viewModel;
+        BindingContext = IPlatformApplication.Current.Services
+                            .GetRequiredService<TransactionAddViewModel>();
     }
 }
